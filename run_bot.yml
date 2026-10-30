@@ -1,0 +1,34 @@
+name: WhatsApp Bot
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Jalan tiap jam, ganti sesuai kebutuhan
+  workflow_dispatch:       # Bisa jalan manual dari GitHub
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install playwright
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Run bot
+        run: python bot.py
+
+      - name: Upload screenshot
+        uses: actions/upload-artifact@v3
+        with:
+          name: hasil-screenshot
+          path: hasil_submit.png
